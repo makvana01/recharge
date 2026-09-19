@@ -1,68 +1,48 @@
 import React from 'react';
-import { Gift, Copy, Check, Sparkles, Tag, ArrowRight } from 'lucide-react';
-import { VALID_COUPONS } from '../data/coupons';
 
-export default function DealsSection({ onCopyCode }) {
-  const couponsList = Object.values(VALID_COUPONS);
-
+export default function DealsSection() {
   return (
-    <section className="section" id="deals-section">
-      <div className="container">
-        
-        <div className="section-header center">
-          <div className="section-badge">
-            <Gift size={14} /> EXCLUSIVE SAVINGS
+    <section className="section soft" id="offers">
+      <div className="wrap">
+        <div className="sectiontop">
+          <div>
+            <label>LATEST DEAL IDEAS</label>
+            <h2>What should you check before paying?</h2>
           </div>
-          <h2 className="section-title">Verified Recharge Coupons &amp; Deals</h2>
-          <p className="section-subtitle">
-            Apply these guaranteed discount codes at checkout to instantly deduct your bill.
-          </p>
+          <a href="#guides">View all articles →</a>
         </div>
 
-        <div className="coupons-cards-grid">
-          {couponsList.map(c => (
-            <div key={c.code} className="coupon-deal-card">
-              <div className="coupon-deal-top">
-                <span className="coupon-deal-type">
-                  <Sparkles size={13} /> {c.discountType === 'flat' ? 'FLAT CASHBACK' : 'PERCENT OFF'}
-                </span>
-                <span className="min-order-tag">Min. ₹{c.minAmount}</span>
-              </div>
-
-              <div className="coupon-deal-code-row">
-                <span className="coupon-code-text">{c.code}</span>
-                <button
-                  type="button"
-                  className="coupon-copy-btn"
-                  onClick={() => onCopyCode(c.code)}
-                  title="Click to copy coupon code"
-                >
-                  <Copy size={14} />
-                  <span>Copy</span>
-                </button>
-              </div>
-
-              <p className="coupon-deal-desc">{c.description}</p>
-              
-              <div className="coupon-deal-footer">
-                <span>✓ Applied instantly at checkout</span>
-              </div>
+        <div className="cards">
+          <article>
+            <div className="pic p1">₹</div>
+            <div>
+              <label>JIO</label>
+              <h3>How to find the best price for a Jio recharge plan</h3>
+              <p>Compare plan price with current coupons, cashback and payment offers.</p>
+              <a href="#plans-explorer">Read article →</a>
             </div>
-          ))}
-        </div>
+          </article>
 
-        {/* Big Savings Highlight Strip */}
-        <div className="annual-savings-banner">
-          <div className="banner-left">
-            <span className="banner-badge">PRO TIP</span>
-            <h3>Recharge quarterly or annually to save up to ₹850+</h3>
-            <p>Monthly recharges of ₹349 cost ₹4,188/year. Single annual pack costs only ₹3,599 with equal 5G benefits.</p>
-          </div>
-          <a href="#plans-explorer" className="btn btn-white banner-btn">
-            Explore 84d &amp; 365d Plans <ArrowRight size={16} />
-          </a>
-        </div>
+          <article>
+            <div className="pic p2">%</div>
+            <div>
+              <label>AIRTEL</label>
+              <h3>Airtel recharge offers worth checking before you pay</h3>
+              <p>A quick guide to spotting useful discounts and avoiding misleading deals.</p>
+              <a href="#plans-explorer">Read article →</a>
+            </div>
+          </article>
 
+          <article>
+            <div className="pic p3">⚡</div>
+            <div>
+              <label>ALL OPERATORS</label>
+              <h3>5 simple ways to reduce your mobile recharge cost</h3>
+              <p>Learn where discounts usually appear and what to compare.</p>
+              <a href="#plans-explorer">Read article →</a>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
   );

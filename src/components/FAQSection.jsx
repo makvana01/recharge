@@ -32,16 +32,14 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="section soft-bg" id="faq-section">
-      <div className="container max-w-3xl">
+    <section className="section" id="faq-section">
+      <div className="wrap" style={{ maxWidth: '800px' }}>
         
-        <div className="section-header center">
-          <div className="section-badge">
-            <HelpCircle size={14} /> FREQUENTLY ASKED
-          </div>
-          <h2 className="section-title">Got Questions? We’ve Got Answers.</h2>
-          <p className="section-subtitle">
-            Everything you need to know about our zero-fee mobile recharge platform and security.
+        <div className="center">
+          <label>FREQUENTLY ASKED</label>
+          <h2>Frequently Asked Questions</h2>
+          <p>
+            Everything you need to know about instant mobile recharge, operator activation, and zero platform fees.
           </p>
         </div>
 

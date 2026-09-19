@@ -7,6 +7,7 @@ import DealsSection from './components/DealsSection';
 import HistorySection from './components/HistorySection';
 import GuidesSection from './components/GuidesSection';
 import FAQSection from './components/FAQSection';
+import AboutSection from './components/AboutSection';
 import Footer from './components/Footer';
 import CheckoutModal from './components/CheckoutModal';
 import SuccessModal from './components/SuccessModal';
@@ -176,7 +177,7 @@ export default function App() {
 
       {/* Main Application Content */}
       <main>
-        {/* Hero Section with Interactive Recharge Engine */}
+        {/* 1. Hero Section with SMART RECHARGE DISCOVERY & Today's Deal Card */}
         <HeroRecharge
           mobile={mobile}
           setMobile={setMobile}
@@ -190,34 +191,37 @@ export default function App() {
           onExplorePlans={handleScrollToExplorer}
         />
 
-        {/* Plan Explorer with Category & Keyword Search */}
+        {/* 2. Choose Your Network (Operators) */}
+        <OperatorsSection onSelectOperator={handleOperatorSelect} />
+
+        {/* 3. Latest Deal Ideas (Offers) */}
+        <DealsSection onCopyCode={handleCopyCode} />
+
+        {/* 4. Plan Explorer with Search & Instant Recharge */}
         <PlanExplorer
           activeOperator={operator}
           setActiveOperator={setOperator}
           onSelectPlan={handleSelectPlan}
         />
 
-        {/* Supported Operators Showcase */}
-        <OperatorsSection onSelectOperator={handleOperatorSelect} />
+        {/* 5. Recharge Knowledge Hub (Guides & Newsletter) */}
+        <GuidesSection />
 
-        {/* Deals & Coupons Showcase */}
-        <DealsSection onCopyCode={handleCopyCode} />
+        {/* 6. Why RechargeWise & Next Recharge CTA */}
+        <AboutSection onExploreClick={handleScrollToExplorer} />
 
-        {/* Recharge History & Repeat Recharge */}
+        {/* 7. Recharge History */}
         <HistorySection
           history={history}
           onRepeatRecharge={handleRepeatRecharge}
           onClearHistory={handleClearHistory}
         />
 
-        {/* Educational Telecom Guides */}
-        <GuidesSection />
-
-        {/* FAQs Accordion */}
+        {/* 8. Help & FAQs Accordion */}
         <FAQSection />
       </main>
 
-      {/* Site Footer */}
+      {/* 9. Site Footer */}
       <Footer onOpenSupport={() => setIsSupportOpen(true)} />
 
       {/* Interactive Checkout Modal (UPI QR, Apps, Cards, Coupons) */}

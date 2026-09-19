@@ -62,224 +62,157 @@ export default function HeroRecharge({
   const currentOpInfo = OPERATORS.find(o => o.name === operator) || OPERATORS[0];
 
   return (
-    <section className="hero-section" id="recharge-hero">
-      <div className="container hero-layout">
+    <section className="hero" id="recharge-hero">
+      <div className="wrap hero-grid">
         
-        {/* Left Column: Heading & Value Proposition */}
-        <div className="hero-text-content">
-          <div className="badge-pill">
-            <Sparkles size={15} className="text-amber" />
-            <span>INDIA'S SMARTEST RECHARGE ENGINE</span>
-          </div>
-
-          <h1 className="hero-headline">
-            Recharge less.<br />
-            <span className="highlight-gradient">Save on every pack.</span>
-          </h1>
-
-          <p className="hero-description">
-            Find and recharge top mobile plans for <strong>Jio, Airtel, Vi & BSNL</strong> at guaranteed lowest net prices. Compare daily data, unlimited 5G packs, OTT bundles, and claim instant cashback without platform fees.
+        {/* Left Column: Heading, Recharge Bar, Actions & Checks */}
+        <div>
+          <label>SMART RECHARGE DISCOVERY</label>
+          <h1>Recharge less.<br /><em>Save more.</em></h1>
+          <p>
+            Find better ways to recharge Airtel, Jio, Vi and BSNL. We compare plans, offers, cashback and coupons so you know where you can save.
           </p>
 
-          <div className="hero-highlights">
-            <div className="highlight-item">
-              <CheckCircle size={18} className="highlight-icon" />
-              <span>Zero Convenience / Platform Fees</span>
-            </div>
-            <div className="highlight-item">
-              <CheckCircle size={18} className="highlight-icon" />
-              <span>Instant Operator API Push (&lt; 2 seconds)</span>
-            </div>
-            <div className="highlight-item">
-              <CheckCircle size={18} className="highlight-icon" />
-              <span>Up to ₹50 Coupon Discount Applied Live</span>
-            </div>
-          </div>
+          {/* Integrated Quick Recharge Card */}
+          <div className="hero-recharge-input-card">
+            <div className="input-card-row">
+              <div className="input-card-field flex-2">
+                <span className="field-label">Mobile Number</span>
+                <div className="field-input-wrap">
+                  <span className="prefix">+91</span>
+                  <input
+                    type="tel"
+                    id="mobileInput"
+                    placeholder="Enter 10-digit number"
+                    value={mobile}
+                    onChange={handleMobileChange}
+                    maxLength={10}
+                    autoComplete="tel"
+                  />
+                </div>
+              </div>
 
-          {/* Quick Operator Status Bar */}
-          <div className="supported-networks-bar">
-            <span className="network-label">Live Operator Gateways:</span>
-            <div className="network-pills">
-              {OPERATORS.map((op) => (
-                <button
-                  key={op.name}
-                  onClick={() => setOperator(op.name)}
-                  className={`network-chip ${operator === op.name ? 'active' : ''}`}
-                  style={{
-                    borderColor: operator === op.name ? op.color : 'transparent',
-                    backgroundColor: operator === op.name ? op.lightBg : 'rgba(255,255,255,0.8)',
-                    color: operator === op.name ? op.color : '#374151'
-                  }}
+              <div className="input-card-field flex-1">
+                <span className="field-label">Operator</span>
+                <select 
+                  value={operator} 
+                  onChange={(e) => setOperator(e.target.value)}
+                  className="field-select"
                 >
-                  <span className="net-initial" style={{ backgroundColor: op.color }}>{op.initial}</span>
-                  <strong>{op.name}</strong>
-                  {operator === op.name && <span className="active-dot" style={{ backgroundColor: op.color }}></span>}
+                  <option value="Jio">Jio</option>
+                  <option value="Airtel">Airtel</option>
+                  <option value="Vi">Vi</option>
+                  <option value="BSNL">BSNL</option>
+                </select>
+              </div>
+
+              <div className="input-card-field flex-1">
+                <span className="field-label">Amount</span>
+                <div className="field-input-wrap">
+                  <span className="prefix">₹</span>
+                  <input
+                    type="number"
+                    placeholder="299"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="input-card-btn-wrap">
+                <button 
+                  type="button" 
+                  className="btn primary hero-recharge-cta-btn"
+                  onClick={onProceedRecharge}
+                >
+                  Recharge Now →
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Amount Suggestion Pills */}
+            <div className="quick-amount-pills">
+              <span className="pills-title">Popular:</span>
+              {quickAmounts.map(amt => (
+                <button
+                  key={amt}
+                  type="button"
+                  className={`pill-btn ${amount === amt.toString() ? 'active' : ''}`}
+                  onClick={() => handleQuickAmountClick(amt)}
+                >
+                  ₹{amt}
                 </button>
               ))}
             </div>
           </div>
+
+          <div className="actions">
+            <a className="btn primary" href="#plans-explorer" onClick={onExplorePlans}>
+              Explore Recharge Guides →
+            </a>
+            <a className="btn" href="#offers">
+              Latest Offers
+            </a>
+          </div>
+
+          <div className="checks">
+            ✓ 100% Direct UPI &nbsp; ✓ Practical guides &nbsp; ✓ Updated deals
+          </div>
         </div>
 
-        {/* Right Column: Interactive Mobile Recharge Card */}
-        <div className="hero-card-wrapper">
-          <div className="recharge-card">
-            
-            {/* Connection Type Tabs */}
-            <div className="card-tab-header">
-              <button 
-                type="button" 
-                className={`type-tab ${connType === 'prepaid' ? 'active' : ''}`}
-                onClick={() => setConnType('prepaid')}
-              >
-                Prepaid Mobile
-              </button>
-              <button 
-                type="button" 
-                className={`type-tab ${connType === 'postpaid' ? 'active' : ''}`}
-                onClick={() => setConnType('postpaid')}
-              >
-                Postpaid Bill
-              </button>
+        {/* Right Column: Today's Idea Deal Card (100% match quer-gifts.com) */}
+        <div className="deal">
+          <div className="dealhead">
+            <div>
+              <small>TODAY'S IDEA</small>
+              <h2>Before you recharge...</h2>
             </div>
-
-            <div className="card-form-body">
-              
-              {/* Mobile Number Input */}
-              <div className="form-group">
-                <label className="input-label" htmlFor="mobileInput">
-                  Mobile Number
-                  {mobile.length === 10 && (
-                    <span className="valid-tag">
-                      <CheckCircle size={12} /> Valid 10-digit
-                    </span>
-                  )}
-                </label>
-                <div className="input-wrapper mobile-wrapper">
-                  <div className="country-code">
-                    <span className="flag">🇮🇳</span>
-                    <span>+91</span>
-                  </div>
-                  <input
-                    type="tel"
-                    id="mobileInput"
-                    placeholder="Enter 10-digit mobile number"
-                    value={mobile}
-                    onChange={handleMobileChange}
-                    maxLength={10}
-                    className="form-input mobile-input"
-                  />
-                  {operator && (
-                    <div className="auto-detected-badge" style={{ backgroundColor: currentOpInfo.lightBg, color: currentOpInfo.color }}>
-                      <span className="badge-dot" style={{ backgroundColor: currentOpInfo.color }}></span>
-                      {operator}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Operator & Circle Dual Select */}
-              <div className="form-row-2">
-                <div className="form-group">
-                  <label className="input-label" htmlFor="operatorSelect">Operator</label>
-                  <select
-                    id="operatorSelect"
-                    value={operator}
-                    onChange={(e) => setOperator(e.target.value)}
-                    className="form-select"
-                  >
-                    {OPERATORS.map(op => (
-                      <option key={op.name} value={op.name}>{op.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="input-label" htmlFor="circleSelect">Telecom Circle</label>
-                  <select
-                    id="circleSelect"
-                    value={circle}
-                    onChange={(e) => setCircle(e.target.value)}
-                    className="form-select"
-                  >
-                    {CIRCLES.map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Recharge Amount Input with Plan Browser Button */}
-              <div className="form-group">
-                <div className="amount-label-row">
-                  <label className="input-label" htmlFor="amountInput">Recharge Amount (₹)</label>
-                  <button 
-                    type="button" 
-                    className="browse-plans-link" 
-                    onClick={onExplorePlans}
-                  >
-                    Browse All Plans <ChevronRight size={14} />
-                  </button>
-                </div>
-                <div className="input-wrapper">
-                  <span className="currency-prefix">₹</span>
-                  <input
-                    type="number"
-                    id="amountInput"
-                    placeholder="e.g. 299, 349, 719"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="form-input amount-input"
-                  />
-                </div>
-              </div>
-
-              {/* Quick Amount Suggestion Chips */}
-              <div className="quick-amount-chips">
-                {quickAmounts.map(amt => (
-                  <button
-                    key={amt}
-                    type="button"
-                    className={`amt-chip ${amount === amt.toString() ? 'selected' : ''}`}
-                    onClick={() => handleQuickAmountClick(amt)}
-                  >
-                    ₹{amt}
-                  </button>
-                ))}
-              </div>
-
-              {/* Matching Plan Details Preview (if amount matches a plan) */}
-              {matchingPlan && (
-                <div className="plan-preview-box animate-fade-in">
-                  <div className="preview-top">
-                    <span className="preview-tag">{matchingPlan.tag || 'Popular'}</span>
-                    <span className="preview-val">⏳ {matchingPlan.validity}</span>
-                  </div>
-                  <div className="preview-desc">
-                    <strong>{matchingPlan.data}</strong> · {matchingPlan.voice} · {matchingPlan.sms}
-                  </div>
-                  {matchingPlan.ott && matchingPlan.ott.length > 0 && (
-                    <div className="preview-ott">
-                      🎬 {matchingPlan.ott.join(', ')}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Proceed to Recharge CTA */}
-              <button
-                type="button"
-                className="btn btn-primary btn-block proceed-btn"
-                onClick={onProceedRecharge}
-              >
-                <span>⚡ Proceed to Recharge</span>
-                {amount ? <span className="btn-amount-badge">₹{amount}</span> : null}
-              </button>
-
-              <div className="card-trust-footer">
-                <span>🔒 Powered by 256-bit Encrypted Telecom Gateway</span>
-              </div>
-            </div>
+            <i>✦</i>
           </div>
+
+          <div className="dealinner">
+            <div className="plan">
+              <b className={operator.toLowerCase() === 'airtel' ? 'air' : operator.toLowerCase() === 'vi' ? 'vi' : operator.toLowerCase() === 'bsnl' ? 'bsnl' : 'jio'}>
+                {operator.charAt(0)}
+              </b>
+              <span>
+                <strong>Popular ₹{amount || '299'} plan</strong>
+                <small>{operator} Prepaid · Check available offers</small>
+              </span>
+            </div>
+
+            <div className="prices">
+              <div>
+                Plan price
+                <strong>₹{amount || '299'}</strong>
+              </div>
+              <div>
+                Possible savings
+                <strong className="green">₹10+</strong>
+              </div>
+            </div>
+
+            <div className="bar">
+              <span></span>
+            </div>
+
+            <p>💡 A coupon or cashback offer may reduce your effective cost.</p>
+            
+            <button 
+              type="button" 
+              className="dealbtn"
+              onClick={onProceedRecharge}
+            >
+              Recharge ₹{amount || '299'} Now →
+            </button>
+          </div>
+
+          <footer>
+            <span>📱 Airtel</span>
+            <span>Jio</span>
+            <span>Vi</span>
+            <span>BSNL</span>
+          </footer>
         </div>
 
       </div>

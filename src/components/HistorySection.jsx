@@ -17,26 +17,25 @@ export default function HistorySection({
   };
 
   return (
-    <section className="section soft-bg" id="history-section">
-      <div className="container">
+    <section className="section soft" id="history-section">
+      <div className="wrap">
         
-        <div className="section-header-split">
+        <div className="sectiontop">
           <div>
-            <div className="section-badge">
-              <History size={14} /> TRANSACTION PASSBOOK
-            </div>
-            <h2 className="section-title">My Recent Recharges</h2>
-            <p className="section-subtitle">
+            <label>TRANSACTION PASSBOOK</label>
+            <h2>My Recent Recharges</h2>
+            <p style={{ margin: 0, fontSize: '12px', color: '#747d91' }}>
               Locally saved transaction logs. Easily repeat previous packs with one click.
             </p>
           </div>
           {history.length > 0 && (
             <button 
               type="button" 
-              className="btn btn-outline btn-sm clear-history-btn" 
+              className="btn" 
               onClick={onClearHistory}
+              style={{ padding: '8px 14px', fontSize: '11px' }}
             >
-              <Trash2 size={14} /> Clear History
+              <Trash2 size={13} style={{ marginRight: 5 }} /> Clear History
             </button>
           )}
         </div>
