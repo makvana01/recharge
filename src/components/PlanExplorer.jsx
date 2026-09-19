@@ -38,16 +38,14 @@ export default function PlanExplorer({
   const currentOpInfo = OPERATORS.find(o => o.name === activeOperator) || OPERATORS[0];
 
   return (
-    <section className="section plans-explorer-section" id="plans-explorer">
-      <div className="container">
+    <section className="section" id="plans-explorer">
+      <div className="wrap">
         
         {/* Section Header */}
-        <div className="section-header center">
-          <div className="section-badge">
-            <Zap size={14} /> TARIFF DIRECTORY
-          </div>
-          <h2 className="section-title">Explore Verified Prepaid Plans</h2>
-          <p className="section-subtitle">
+        <div className="center">
+          <label>TARIFF DIRECTORY</label>
+          <h2>Explore Verified Prepaid Plans</h2>
+          <p>
             Compare plans side-by-side with genuine OTT bundles, high-speed 5G quotas, and validity perks.
           </p>
         </div>
