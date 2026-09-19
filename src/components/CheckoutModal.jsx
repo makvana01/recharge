@@ -48,12 +48,15 @@ export default function CheckoutModal({
     }
   }
   const payableAmount = Math.max(originalPrice - discount, 1);
+  const formattedAmount = Number(payableAmount).toFixed(2);
+  const upiNote = `Recharge ${mobile || 'Mobile'}`;
 
-  // Generate dynamic UPI URI and QR Code
-  const upiUri = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${payableAmount}&cu=INR&tn=${encodeURIComponent(`Recharge ${mobile || 'Mobile'}`)}`;
+  // Universal standard UPI URI (used for QR code and universal chooser)
+  const universalUpiUri = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(upiNote)}`;
 
+  // Generate dynamic Universal QR Code (scannable by PhonePe, Paytm, GPay, BHIM, etc.)
   useEffect(() => {
-    QRCode.toDataURL(upiUri, {
+    QRCode.toDataURL(universalUpiUri, {
       width: 230,
       margin: 2,
       color: {
@@ -63,7 +66,7 @@ export default function CheckoutModal({
     })
       .then(url => setQrDataUrl(url))
       .catch(err => console.error("QR Code Error:", err));
-  }, [upiUri]);
+  }, [universalUpiUri]);
 
   // QR Countdown Timer
   useEffect(() => {
@@ -82,38 +85,80 @@ export default function CheckoutModal({
     return `0${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  const getAppUri = (app) => {
-    const note = `Recharge ${mobile || 'Mobile'}`;
-    const params = `pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${payableAmount}&cu=INR&tn=${encodeURIComponent(note)}`;
-    if (app === 'phonepe') return `phonepe://pay?${params}`;
-    if (app === 'paytm') return `paytmmp://pay?${params}`;
-    if (app === 'gpay') return `gpay://upi/pay?${params}`;
-    return `upi://pay?${params}`; // Default for all UPI apps & QR Code
+  // Construct platform-specific deep links (Android Intent vs iOS vs Universal)
+  const getAppDeepLink = (app) => {
+    const params = `pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(upiNote)}`;
+    
+    const ua = typeof navigator !== 'undefined' ? (navigator.userAgent || '').toLowerCase() : '';
+    const isAndroid = /android/i.test(ua);
+    const isIOS = /iphone|ipad|ipod/i.test(ua);
+
+    if (app === 'phonepe') {
+      if (isAndroid) {
+        // Android Chrome Intent explicitly targeting PhonePe application
+        return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;end`;
+      }
+      if (isIOS) {
+        return `phonepe://pay?${params}`;
+      }
+      return `intent://pay?${params}#Intent;scheme=upi;package=com.phonepe.app;end`;
+    }
+
+    if (app === 'paytm') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=net.one97.paytm;end`;
+      }
+      return `paytmmp://pay?${params}`;
+    }
+
+    if (app === 'gpay') {
+      if (isAndroid) {
+        return `intent://pay?${params}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+      }
+      return `gpay://upi/pay?${params}`;
+    }
+
+    // Default: Universal UPI Intent
+    if (isAndroid) {
+      return `intent://pay?${params}#Intent;scheme=upi;end`;
+    }
+    return `upi://pay?${params}`;
+  };
+
+  // Immediate synchronous deep link launcher to preserve mobile user gesture token
+  const launchDeepLink = (url) => {
+    if (!url || typeof window === 'undefined') return;
+
+    try {
+      const link = document.createElement('a');
+      link.href = url;
+      link.rel = 'noopener noreferrer';
+      link.target = '_top';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        try {
+          document.body.removeChild(link);
+        } catch (e) {}
+      }, 300);
+    } catch (err) {
+      window.location.href = url;
+    }
   };
 
   // When user selects a UPI app or Scan QR
-  const handlePayment = async (app) => {
+  const handlePayment = (app) => {
     setSelectedMethod(app);
-    const upiUrl = getAppUri(app);
+    const deepLinkUrl = getAppDeepLink(app);
 
-    // Generate Dynamic QR Code for the specific UPI URL
-    try {
-      const qrData = await QRCode.toDataURL(upiUrl, {
-        width: 220,
-        margin: 1,
-        color: {
-          dark: '#0f172a',
-          light: '#ffffff'
-        }
-      });
-      setQrDataUrl(qrData);
-    } catch (err) {
-      console.error('QR Code error:', err);
-    }
+    // If mobile or touch screen, immediately fire native app intent synchronously
+    const isMobile = typeof window !== 'undefined' && (
+      window.innerWidth <= 820 ||
+      /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent || '')
+    );
 
-    // If on mobile device, directly launch the native UPI app!
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      window.location.href = upiUrl;
+    if (isMobile) {
+      launchDeepLink(deepLinkUrl);
     }
   };
 
@@ -408,6 +453,43 @@ export default function CheckoutModal({
                     </button>
                   </div>
 
+                  {/* Direct Native App Launch Card */}
+                  <div className={`active-app-action-box ${selectedMethod}-action-box animate-fade-in`}>
+                    <div className="action-box-header">
+                      <span className="action-box-tag">
+                        {selectedMethod === 'phonepe' ? '🟣 PhonePe' :
+                         selectedMethod === 'gpay' ? '🔵 Google Pay' :
+                         selectedMethod === 'paytm' ? '🔷 Paytm' : '📱 Universal UPI'}
+                      </span>
+                      <span className="action-box-amount">₹{formattedAmount}</span>
+                    </div>
+
+                    <a
+                      href={getAppDeepLink(selectedMethod === 'upi-qr' ? 'all' : selectedMethod)}
+                      className={`btn-launch-app btn-launch-${selectedMethod}`}
+                      target="_top"
+                      rel="noopener noreferrer"
+                    >
+                      <Smartphone size={18} />
+                      <span>
+                        {selectedMethod === 'phonepe' ? 'Open PhonePe App (PhonePe ખોલો)' :
+                         selectedMethod === 'gpay' ? 'Open Google Pay (GPay ખોલો)' :
+                         selectedMethod === 'paytm' ? 'Open Paytm App (Paytm ખોલો)' :
+                         'Open UPI App (કોઈપણ UPI App ખોલો)'}
+                      </span>
+                      <ArrowRight size={16} />
+                    </a>
+
+                    {selectedMethod !== 'all' && selectedMethod !== 'upi-qr' && (
+                      <div className="action-box-fallback">
+                        <span>App didn't open? </span>
+                        <a href={universalUpiUri} className="fallback-link" target="_top">
+                          👉 Tap for Any UPI App (કોઈપણ UPI App)
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Dynamic QR Code & Payee Display Area */}
                   <div className="qr-container-box animate-fade-in">
                     <div className="qr-box-inner">
@@ -437,7 +519,7 @@ export default function CheckoutModal({
                       </div>
                       <div className="payee-row">
                         <span className="payee-label">Payable Amount:</span>
-                        <strong className="final-price-sm">₹{payableAmount}</strong>
+                        <strong className="final-price-sm">₹{formattedAmount}</strong>
                       </div>
                     </div>
 
@@ -451,9 +533,10 @@ export default function CheckoutModal({
                         <span>{copiedUpi ? 'Copied UPI ID' : 'Copy UPI ID'}</span>
                       </button>
                       <a 
-                        href={getAppUri(selectedMethod === 'upi-qr' ? 'all' : selectedMethod)} 
+                        href={getAppDeepLink(selectedMethod === 'upi-qr' ? 'all' : selectedMethod)} 
                         className="open-upi-app-link"
                         title="Open payment directly in your installed UPI app"
+                        target="_top"
                       >
                         <Smartphone size={14} /> Open in UPI App
                       </a>

@@ -96,7 +96,6 @@ input, textarea, select, button {
   -webkit-user-select: auto;
   user-select: auto;
 }
-}
 
 a {
   color: inherit;
@@ -2452,6 +2451,118 @@ button {
   border-radius: var(--radius-full);
   background: var(--slate-100);
   color: var(--slate-600);
+}
+
+/* Direct Native App Launch Card */
+.active-app-action-box {
+  background: #F8FAFC;
+  border: 1.5px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.phonepe-action-box {
+  background: #FAF5FF;
+  border-color: #D8B4FE;
+}
+
+.gpay-action-box {
+  background: #EFF6FF;
+  border-color: #93C5FD;
+}
+
+.paytm-action-box {
+  background: #F0F9FF;
+  border-color: #7DD3FC;
+}
+
+.all-action-box, .upi-qr-action-box {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+}
+
+.action-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.action-box-tag {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--slate-800);
+}
+
+.action-box-amount {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: var(--font-display);
+}
+
+.btn-launch-app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-launch-app:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.btn-launch-phonepe {
+  background: linear-gradient(135deg, #5F259F 0%, #4B1E7E 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(95, 37, 159, 0.35);
+}
+
+.btn-launch-gpay {
+  background: linear-gradient(135deg, #1A73E8 0%, #1557B0 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(26, 115, 232, 0.35);
+}
+
+.btn-launch-paytm {
+  background: linear-gradient(135deg, #00BAF2 0%, #0084B4 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(0, 186, 242, 0.35);
+}
+
+.btn-launch-all, .btn-launch-upi-qr {
+  background: linear-gradient(135deg, #0066FF 0%, #004ecc 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(0, 102, 255, 0.35);
+}
+
+.action-box-fallback {
+  font-size: 0.775rem;
+  color: var(--slate-600);
+  text-align: center;
+  line-height: 1.4;
+  padding-top: 2px;
+}
+
+.action-box-fallback .fallback-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .final-price-sm {
